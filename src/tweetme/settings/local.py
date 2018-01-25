@@ -54,7 +54,7 @@ ROOT_URLCONF = 'tweetme.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -120,8 +120,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
+    #Will not be served, long term storage
     os.path.join(BASE_DIR, "static-storage"),
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static-serve")
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static-serve")
 
