@@ -1,4 +1,4 @@
-#!/home/glassy/Github/Django/tweetme/bin/python3
+#!/home/glassy/Github/Django/Tweetme/bin/python3
 from django.core import management
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-#!/home/glassy/Github/Django/tweetme/bin/python
+#!/home/glassy/Github/Django/Tweetme/bin/python
 
 import sys
 import getopt
