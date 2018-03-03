@@ -1,20 +1,23 @@
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView, ListView, CreateView
 
 from .models import Tweet
 from .forms import TweetModelForm
+from .mixins import FormUserNeededMixin
 
 #Create
-
-class TweetCreateView(CreateView):
+#We can use LoginRequiredMixin to present login page if a user is
+#not authenticated
+#class TweetCreateView(LoginRequiredMixin, FormUserNeededMixin, CreateView):
+class TweetCreateView(FormUserNeededMixin, CreateView):
 	form_class = TweetModelForm
-	template_name = 'tweets/create_view.html'
+	template_name = "tweets/create_view.html"
 	success_url = "/tweet/create/"
-	def form_valid(self, form):
-		form.instance.user = self.request.user
-		return super(TweetCreateView, self).form_valid(form)
-		
+	#login_url = "/admin/"
+
+
+
 #This has the same functionality as TweetCreateView
 def tweet_create_view(request):
 	form = TweetModelForm(request.POST or None)
