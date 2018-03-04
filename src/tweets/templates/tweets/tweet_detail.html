@@ -3,8 +3,9 @@
 {% block title %} {{ super.block }} | Detail {% endblock title %}
 
 {% block content %}
-	{{ object.content }} <br/>
+<div class="row">
 	{{ object.user }} <br/>
+	{{ object.content }} <br/>
 	{{ object.timestamp }} <br/>
 	{{ object.timestamp|timesince }} <br/>
 {% endblock content %}
