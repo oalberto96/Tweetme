@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+<style>
+#tweet-container {
+}
+</style>
+
 {% block script %}
 <script>
 function getParameterByName(name, url) {
@@ -14,7 +19,6 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 $(document).ready(function(){
-  console.log("working");
   var query = getParameterByName('q')
   var tweetList = [];
   function parseTweets(){
@@ -33,6 +37,7 @@ $(document).ready(function(){
     }
   }
   function fetchTweets(){
+    console.log("fetching..")
     $.ajax({
       url: "/api/tweet/",
       data: {
@@ -40,7 +45,6 @@ $(document).ready(function(){
       },
       method: "GET",
       success: function(data){
-        // console.log(data)
         tweetList = data
         parseTweets()
        
@@ -52,38 +56,30 @@ $(document).ready(function(){
     })
   }
   fetchTweets()
-
   
-
   $("#tweet-form").submit(function(event){
-    event.preventDefault()
-    var this_ = $(this)
-    var thisData = this_.serialize()
-
+      event.preventDefault()
+      var this_ = $(this)
+      var formData =  this_.serialize()
       $.ajax({
-      url: "/api/tweet/create",
-      data: {
-        "q": query
-      },
-      method: "POST",
-      success: function(data){
-        // console.log(data)
-        // tweetList = data
-        // parseTweets()
-        console.log(data)
-        fetchTweets()
-       
-      },
-      error: function(data){
-        console.log("error")
-        console.log(data.status)
-      }
-    })
-
-    fetchTweets()
+        url: "/api/tweet/create/",
+        data: formData,
+        method: "POST",
+        success: function(data){
+          // console.log(data)
+          fetchTweets()
+          // tweetList = data
+          // parseTweets()
+         
+        },
+        error: function(data){
+          console.log("error")
+          console.log(data.statusText)
+          console.log(data.status)
+        }
+      })
+      
   })
-
-
 });
 </script>
 {% endblock script %}
@@ -94,7 +90,7 @@ $(document).ready(function(){
 
    
     <div class='row'>
-        <div class='col-sm-3 col-xs-12' >
+        <div class='col-sm-3 col-xs-12' style='background-color:red;'>
         <h1>{{ request.user }}</h1>
         </div>
         <div class='col-sm-9 '>
