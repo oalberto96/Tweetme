@@ -32,23 +32,58 @@ $(document).ready(function(){
       })
     }
   }
-  $.ajax({
-    url: "/api/tweet/",
-    data: {
-      "q": query
-    },
-    method: "GET",
-    success: function(data){
-      // console.log(data)
-      tweetList = data
-      parseTweets()
-     
-    },
-    error: function(data){
-      console.log("error")
-      console.log(data)
-    }
+  function fetchTweets(){
+    $.ajax({
+      url: "/api/tweet/",
+      data: {
+        "q": query
+      },
+      method: "GET",
+      success: function(data){
+        // console.log(data)
+        tweetList = data
+        parseTweets()
+       
+      },
+      error: function(data){
+        console.log("error")
+        console.log(data)
+      }
+    })
+  }
+  fetchTweets()
+
+  
+
+  $("#tweet-form").submit(function(event){
+    event.preventDefault()
+    var this_ = $(this)
+    var thisData = this_.serialize()
+
+      $.ajax({
+      url: "/api/tweet/create",
+      data: {
+        "q": query
+      },
+      method: "POST",
+      success: function(data){
+        // console.log(data)
+        // tweetList = data
+        // parseTweets()
+        console.log(data)
+        fetchTweets()
+       
+      },
+      error: function(data){
+        console.log("error")
+        console.log(data.status)
+      }
+    })
+
+    fetchTweets()
   })
+
+
 });
 </script>
 {% endblock script %}
@@ -66,7 +101,7 @@ $(document).ready(function(){
              {% if not request.GET.q %}
                 <div class=''>
                     
-                    {% include "tweets/form.html" with form=create_form action_url=create_url btn_title='Tweet' %}
+                    {% include "tweets/form.html" with form=create_form action_url=create_url btn_title='Tweet' form_id='tweet-form' %}
 
                 </div>
                 <hr/>
