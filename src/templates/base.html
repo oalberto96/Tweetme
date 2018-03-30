@@ -31,6 +31,32 @@
   crossorigin="anonymous"></script>
   {% block script %}
   {% endblock script %}
+  <script>
+  	$(document).ready(function(){
+  		var typingTimer;
+  		var doneInterval = 500; // in ms
+  		var searchInput = $("#navbar-search-form input[type=text]")
+  		var searchQuery;
+
+  		searchInput.keyup(function(event){
+  			searchQuery = $(this).val()
+
+  			clearTimeout(typingTimer)
+  			typingTimer = setTimeout(doneSearchingTyping, doneInterval)
+  		})
+
+  		searchInput.keydown(function(event){
+  			clearTimeout(typingTimer)
+  		})
+
+  		function doneSearchingTyping(){
+  			if (searchQuery) {
+  				var url = '/tweet/search/?q=' + searchQuery
+  				document.location.href = url
+  			}
+  		}
+  	})
+  </script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
 </html>
