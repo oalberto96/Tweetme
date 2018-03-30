@@ -18,9 +18,25 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+
 $(document).ready(function(){
   var query = getParameterByName('q')
   var tweetList = [];
+
+  function attachTweet(tweetValue, prepend){
+    var dateDisplay = tweetValue.timesince
+    var tweetContent = tweetValue.content;
+    var tweetUser = tweetValue.user;
+    var tweetFormattedHtml = "<div class=\"media\"><div class=\"media-body\">" + tweetContent + "<br/> via " + tweetUser.username + " | " + dateDisplay + " | " + "<a href='#'>View</a>" + "</div></div><hr/>"
+    if (prepend) {
+      $("#tweet-container").prepend(tweetFormattedHtml)
+    } else {
+      $("#tweet-container").append(tweetFormattedHtml)
+    }
+
+  }
+
   function parseTweets(){
     if (tweetList == 0) {
       $("#tweet-container").text("No tweets currently found.")
@@ -28,12 +44,7 @@ $(document).ready(function(){
       // tweets exist, parse & display them
      $.each(tweetList, function(key, value){
           var tweetKey = key;
-          var dateDisplay = value.timesince
-          var tweetContent = value.content;
-          var tweetUser = value.user;
-          $("#tweet-container").append(
-              "<div class=\"media\"><div class=\"media-body\">" + tweetContent + "<br/> via " + tweetUser.username + " | " + dateDisplay + " | " + "<a href='#'>View</a>" + "</div></div><hr/>"
-          )
+          attachTweet(value, false)
       })
     }
   }
@@ -62,13 +73,16 @@ $(document).ready(function(){
       event.preventDefault()
       var this_ = $(this)
       var formData =  this_.serialize()
+
       $.ajax({
         url: "/api/tweet/create/",
         data: formData,
         method: "POST",
         success: function(data){
+          this_.find("input[type=text], textarea").val("")
+          attachTweet(data, true)
           // console.log(data)
-          fetchTweets()
+          //fetchTweets()
           // tweetList = data
           // parseTweets()
          
