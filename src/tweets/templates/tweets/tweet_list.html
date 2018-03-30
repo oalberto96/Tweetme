@@ -68,31 +68,62 @@ $(document).ready(function(){
     })
   }
   fetchTweets()
+  var charsStart = 30;
+  var charsCurrent = 0;
+
+  $("#tweet-form").append("<span id='tweetCharsLeft'>"+ charsStart+"</span>")
+
+  $("#tweet-form input").keyup(function(event){
+    //console.log(event.key)
+    var tweetValue = $(this).val()
+    charsCurrent = charsStart - tweetValue.length
+    var spanChars = $("#tweetCharsLeft")
+    spanChars.text(charsCurrent)
+
+    $("#tweetCharsLeft").text(charsCurrent)
+
+    if (charsCurrent > 0) {
+      spanChars.removeClass("red-color")
+      spanChars.removeClass("grey-color")
+      //remove classes
+    } else if (charsCurrent == 0) {
+      spanChars.removeClass("red-color")
+      spanChars.addClass("grey-color")
+      // add gray class
+    } else if (charsCurrent < 0) {
+      spanChars.removeClass("grey-color")
+      spanChars.addClass("red-color")
+    }
+  })
   
   $("#tweet-form").submit(function(event){
       event.preventDefault()
       var this_ = $(this)
       var formData =  this_.serialize()
-
-      $.ajax({
-        url: "/api/tweet/create/",
-        data: formData,
-        method: "POST",
-        success: function(data){
-          this_.find("input[type=text], textarea").val("")
-          attachTweet(data, true)
-          // console.log(data)
-          //fetchTweets()
-          // tweetList = data
-          // parseTweets()
-         
-        },
-        error: function(data){
-          console.log("error")
-          console.log(data.statusText)
-          console.log(data.status)
-        }
-      })
+      if (charsCurrent >= 0) {      
+        $.ajax({
+          url: "/api/tweet/create/",
+          data: formData,
+          method: "POST",
+          success: function(data){
+            this_.find("input[type=text], textarea").val("")
+            attachTweet(data, true)
+            // console.log(data)
+            //fetchTweets()
+            // tweetList = data
+            // parseTweets()
+           
+          },
+          error: function(data){
+            console.log("error")
+            console.log(data.statusText)
+            console.log(data.status)
+          }
+        })
+      }
+      else {
+        alert("Cannot send, tweet too long")
+      }
       
   })
 });
